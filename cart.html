@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cart — AURA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0b0b;--surface:#141414;--card:#1c1c1c;--border:#2a2a2a;--accent:#c9a97f;--accent2:#e8d5b4;--text:#f0ece4;--muted:#7a7672;--danger:#e07070;--success:#6db88a;--font-d:'Cormorant Garamond',serif;--font-b:'DM Sans',sans-serif;--r:3px;--tr:.28s cubic-bezier(.4,0,.2,1);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-weight:300;overflow-x:hidden;}
+
+  nav{position:sticky;top:0;z-index:100;background:rgba(11,11,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:68px;}
+  .logo{font-family:var(--font-d);font-size:1.8rem;font-weight:300;letter-spacing:.3em;color:var(--accent);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;align-items:center;}
+  .nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color var(--tr);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a.active{color:var(--accent);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+  .cart-nav{display:flex;align-items:center;gap:.5rem;text-decoration:none;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.5rem 1.1rem;border-radius:var(--r);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:all var(--tr);}
+  .cart-nav:hover{border-color:var(--accent);color:var(--accent);}
+  .cart-badge{background:var(--accent);color:#0b0b0b;border-radius:50%;width:19px;height:19px;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+  .page-hd{padding:2.5rem 3rem 0;}
+  .page-hd h1{font-family:var(--font-d);font-size:2.5rem;font-weight:300;}
+  .divider{height:1px;background:var(--border);margin:1.2rem 3rem 0;}
+
+  /* LAYOUT */
+  .cart-layout{display:grid;grid-template-columns:1fr 370px;gap:2.5rem;padding:2.5rem 3rem;}
+
+  /* ITEMS */
+  .items-col{display:flex;flex-direction:column;gap:1rem;}
+  .cart-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;display:flex;align-items:center;gap:1.4rem;transition:border-color var(--tr);}
+  .cart-item:hover{border-color:rgba(201,169,127,.3);}
+  .ci-thumb{width:76px;height:76px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex-shrink:0;text-decoration:none;transition:border-color var(--tr);}
+  .ci-thumb:hover{border-color:var(--accent);}
+  .ci-info{flex:1;min-width:0;}
+  .ci-name{font-size:.97rem;font-weight:400;margin-bottom:.25rem;text-decoration:none;color:var(--text);display:block;transition:color var(--tr);}
+  .ci-name:hover{color:var(--accent);}
+  .ci-meta{font-size:.74rem;color:var(--muted);}
+  .ci-qty{display:flex;align-items:center;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;flex-shrink:0;}
+  .cq-btn{width:34px;height:34px;background:var(--surface);border:none;color:var(--text);cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all var(--tr);}
+  .cq-btn:hover{background:var(--card);color:var(--accent);}
+  .cq-num{width:40px;height:34px;background:var(--card);border-left:1px solid var(--border);border-right:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:.88rem;}
+  .ci-price{font-family:var(--font-d);font-size:1.3rem;color:var(--accent);min-width:85px;text-align:right;flex-shrink:0;}
+  .ci-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:.3rem;transition:color var(--tr);flex-shrink:0;}
+  .ci-del:hover{color:var(--danger);}
+
+  .cart-footer-row{display:flex;justify-content:space-between;align-items:center;margin-top:.5rem;}
+  .ghost-btn{background:none;border:none;color:var(--muted);font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:color var(--tr);font-family:var(--font-b);padding:0;text-decoration:none;}
+  .ghost-btn:hover{color:var(--accent);}
+  .danger-btn{color:var(--danger)!important;}
+  .danger-btn:hover{color:#f08080!important;}
+
+  /* SUMMARY */
+  .summary-col{position:sticky;top:86px;height:fit-content;}
+  .summary-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.7rem;}
+  .sum-title{font-family:var(--font-d);font-size:1.5rem;margin-bottom:1.5rem;}
+
+  /* Free shipping bar */
+  .fs-bar{margin-bottom:1.2rem;}
+  .fs-lbl{display:flex;justify-content:space-between;font-size:.74rem;color:var(--muted);margin-bottom:.5rem;}
+  .fs-track{height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+  .fs-fill{height:100%;background:var(--success);border-radius:99px;transition:width .4s ease;}
+
+  /* Promo */
+  .promo-row{display:flex;gap:.6rem;margin:1.1rem 0 1.3rem;}
+  .promo-in{flex:1;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.62rem .85rem;border-radius:var(--r);font-family:var(--font-b);font-size:.82rem;outline:none;transition:border-color var(--tr);}
+  .promo-in:focus{border-color:var(--accent);}
+  .promo-in::placeholder{color:var(--muted);}
+  .promo-btn{background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.62rem 1rem;border-radius:var(--r);font-family:var(--font-b);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);white-space:nowrap;}
+  .promo-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  .sum-row{display:flex;justify-content:space-between;margin-bottom:.75rem;font-size:.85rem;}
+  .sum-row.total{border-top:1px solid var(--border);padding-top:.9rem;margin-top:.5rem;font-size:1.05rem;font-weight:500;}
+  .sum-row.total .val{font-family:var(--font-d);font-size:1.5rem;color:var(--accent);}
+  .lbl{color:var(--muted);}
+  .free{color:var(--success);}
+
+  .checkout-cta{width:100%;background:var(--accent);color:#0b0b0b;padding:1rem;border:none;border-radius:var(--r);font-family:var(--font-b);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;cursor:pointer;transition:all var(--tr);margin-top:1.3rem;text-decoration:none;display:block;text-align:center;}
+  .checkout-cta:hover{background:var(--accent2);}
+  .secure-note{display:flex;align-items:center;justify-content:center;gap:.4rem;font-size:.72rem;color:var(--muted);margin-top:.8rem;}
+
+  /* EMPTY */
+  .empty{text-align:center;padding:7rem 2rem;}
+  .empty-icon{font-size:5rem;margin-bottom:1.5rem;opacity:.6;}
+  .empty-title{font-family:var(--font-d);font-size:2.5rem;margin-bottom:.7rem;}
+  .empty-sub{color:var(--muted);margin-bottom:2.5rem;}
+  .btn-p{background:var(--accent);color:#0b0b0b;padding:.9rem 2.2rem;border:none;border-radius:var(--r);font-family:var(--font-b);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;cursor:pointer;text-decoration:none;transition:all var(--tr);display:inline-block;}
+  .btn-p:hover{background:var(--accent2);}
+
+  /* TOAST */
+  #toasts{position:fixed;bottom:2rem;right:2rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;}
+  .toast{background:var(--card);border:1px solid var(--accent);color:var(--text);padding:.8rem 1.3rem;border-radius:var(--r);font-size:.82rem;min-width:230px;animation:tin .3s ease,tout .3s ease 2.5s forwards;}
+  @keyframes tin{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+  @keyframes tout{to{transform:translateX(120%);opacity:0}}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  main{animation:fade .35s ease;}
+
+  footer{border-top:1px solid var(--border);padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;}
+  .f-brand{font-family:var(--font-d);font-size:1.5rem;color:var(--accent);}
+  .f-links{display:flex;gap:2rem;}
+  .f-links a{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color var(--tr);}
+  .f-links a:hover{color:var(--accent);}
+
+  @media(max-width:900px){
+    nav,.page-hd,div.divider,.cart-layout,footer{padding-left:1.2rem;padding-right:1.2rem;}
+    .cart-layout{grid-template-columns:1fr;}
+    .summary-col{position:static;}
+    footer{flex-direction:column;gap:1rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AURA</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html" class="active">Cart</a>
+  </div>
+  <a href="cart.html" class="cart-nav">🛒 Cart <span class="cart-badge" id="cart-badge">0</span></a>
+</nav>
+
+<div id="toasts"></div>
+
+<main>
+  <div class="page-hd"><h1>Your Cart</h1></div>
+  <div class="divider"></div>
+  <div id="cart-body"></div>
+</main>
+
+<footer>
+  <div class="f-brand">AURA</div>
+  <div class="f-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="#">Support</a>
+  </div>
+</footer>
+
+<script>
+  const PRODUCTS=[
+    {id:1,name:'Noir Candle Set',category:'Home',price:2499,emoji:'🕯️'},
+    {id:2,name:'Matte Leather Wallet',category:'Accessories',price:3899,emoji:'👜'},
+    {id:3,name:'Gold Leaf Journal',category:'Stationery',price:1799,emoji:'📓'},
+    {id:4,name:'Ceramic Espresso Set',category:'Kitchen',price:4299,emoji:'☕'},
+    {id:5,name:'Linen Throw Blanket',category:'Home',price:5499,emoji:'🧣'},
+    {id:6,name:'Amber Glass Diffuser',category:'Wellness',price:3199,emoji:'🪔'},
+    {id:7,name:'Brass Desk Lamp',category:'Lighting',price:7999,emoji:'💡'},
+    {id:8,name:'Merino Wool Beanie',category:'Apparel',price:1499,emoji:'🧢'},
+    {id:9,name:'Sandstone Incense Set',category:'Wellness',price:1299,emoji:'🌿'},
+    {id:10,name:'Woven Rattan Tray',category:'Home',price:2199,emoji:'🪣'},
+  ];
+
+  function getCart(){try{return JSON.parse(localStorage.getItem('aura_cart')||'[]');}catch{return[];}}
+  function saveCart(c){localStorage.setItem('aura_cart',JSON.stringify(c));}
+  function removeFromCart(id){saveCart(getCart().filter(i=>i.id!==id));render();}
+  function changeQty(id,d){const c=getCart();const it=c.find(i=>i.id===id);if(!it)return;it.qty+=d;if(it.qty<=0)saveCart(c.filter(i=>i.id!==id));else saveCart(c);render();}
+  function cartCount(){return getCart().reduce((s,i)=>s+i.qty,0);}
+  function cartSubtotal(){return getCart().reduce((s,i)=>{const p=PRODUCTS.find(x=>x.id===i.id);return s+(p?p.price*i.qty:0);},0);}
+  function updateBadge(){const b=document.getElementById('cart-badge');if(b)b.textContent=cartCount();}
+  function toast(msg){const c=document.getElementById('toasts');const t=document.createElement('div');t.className='toast';t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3000);}
+
+  function render(){
+    updateBadge();
+    const cart=getCart();
+    const body=document.getElementById('cart-body');
+    if(!cart.length){
+      body.innerHTML=`
+        <div class="empty">
+          <div class="empty-icon">🛒</div>
+          <h2 class="empty-title">Your cart is empty</h2>
+          <p class="empty-sub">Discover our curated collection and add pieces you love.</p>
+          <a href="shop.html" class="btn-p">Shop Now</a>
+        </div>`;
+      return;
+    }
+
+    const sub=cartSubtotal();
+    const ship=sub>=5000?0:299;
+    const tax=Math.round(sub*.18);
+    const grand=sub+ship+tax;
+    const progress=Math.min((sub/5000)*100,100);
+    const remaining=Math.max(5000-sub,0);
+
+    body.innerHTML=`
+      <div class="cart-layout">
+        <div class="items-col" id="items-col"></div>
+        <div class="summary-col">
+          <div class="summary-box">
+            <h3 class="sum-title">Order Summary</h3>
+            <div class="fs-bar">
+              <div class="fs-lbl">
+                <span>${remaining>0?`Add ₹${remaining.toLocaleString()} for free shipping`:"🎉 Free shipping unlocked!"}</span>
+                <span>${Math.round(progress)}%</span>
+              </div>
+              <div class="fs-track"><div class="fs-fill" style="width:${progress}%"></div></div>
+            </div>
+            <div class="promo-row">
+              <input class="promo-in" id="promo-in" placeholder="Promo code (try AURA10)">
+              <button class="promo-btn" onclick="applyPromo()">Apply</button>
+            </div>
+            <div class="sum-row"><span class="lbl">Subtotal (${cart.reduce((s,i)=>s+i.qty,0)} items)</span><span>₹${sub.toLocaleString()}</span></div>
+            <div class="sum-row"><span class="lbl">Shipping</span><span>${ship===0?'<span class="free">Free</span>':'₹'+ship}</span></div>
+            <div class="sum-row"><span class="lbl">GST (18%)</span><span>₹${tax.toLocaleString()}</span></div>
+            <div class="sum-row total"><span>Total</span><span class="val">₹${grand.toLocaleString()}</span></div>
+            <a href="checkout.html" class="checkout-cta">Proceed to Checkout →</a>
+            <p class="secure-note">🔒 Secure &amp; encrypted checkout</p>
+          </div>
+        </div>
+      </div>`;
+
+    document.getElementById('items-col').innerHTML = cart.map(item=>{
+      const p=PRODUCTS.find(x=>x.id===item.id);
+      if(!p) return '';
+      return `
+        <div class="cart-item">
+          <a href="product.html?id=${p.id}" class="ci-thumb">${p.emoji}</a>
+          <div class="ci-info">
+            <a href="product.html?id=${p.id}" class="ci-name">${p.name}</a>
+            <p class="ci-meta">${p.category} · ₹${p.price.toLocaleString()} each</p>
+          </div>
+          <div class="ci-qty">
+            <button class="cq-btn" onclick="changeQty(${p.id},-1)">−</button>
+            <div class="cq-num">${item.qty}</div>
+            <button class="cq-btn" onclick="changeQty(${p.id},1)">+</button>
+          </div>
+          <div class="ci-price">₹${(p.price*item.qty).toLocaleString()}</div>
+          <button class="ci-del" onclick="removeFromCart(${p.id})" title="Remove">✕</button>
+        </div>`;
+    }).join('')+`
+      <div class="cart-footer-row">
+        <a href="shop.html" class="ghost-btn">← Continue Shopping</a>
+        <button class="ghost-btn danger-btn" onclick="if(confirm('Clear entire cart?')){localStorage.removeItem('aura_cart');render();}">🗑 Clear Cart</button>
+      </div>`;
+  }
+
+  function applyPromo(){
+    const val=(document.getElementById('promo-in')?.value||'').trim().toUpperCase();
+    if(val==='AURA10') toast('✅ Promo applied — 10% off!');
+    else if(val) toast('❌ Invalid promo code');
+    else toast('Enter a promo code first');
+  }
+
+  render();
+</script>
+</body>
+</html>
