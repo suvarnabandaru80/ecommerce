@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Confirmed — AURA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0b0b0b;--surface:#141414;--card:#1c1c1c;--border:#2a2a2a;--accent:#c9a97f;--accent2:#e8d5b4;--text:#f0ece4;--muted:#7a7672;--success:#6db88a;--font-d:'Cormorant Garamond',serif;--font-b:'DM Sans',sans-serif;--r:3px;--tr:.28s cubic-bezier(.4,0,.2,1);}
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-weight:300;overflow-x:hidden;min-height:100vh;}
+
+  nav{position:sticky;top:0;z-index:100;background:rgba(11,11,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:68px;}
+  .logo{font-family:var(--font-d);font-size:1.8rem;font-weight:300;letter-spacing:.3em;color:var(--accent);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;align-items:center;}
+  .nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color var(--tr);}
+  .nav-links a:hover{color:var(--text);}
+
+  /* SUCCESS */
+  .wrap{max-width:640px;margin:0 auto;padding:5rem 2rem 7rem;text-align:center;animation:fadeIn .5s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+  .ring{width:96px;height:96px;margin:0 auto 2.5rem;background:rgba(109,184,138,.1);border:1px solid rgba(109,184,138,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:3rem;animation:pop .6s cubic-bezier(.175,.885,.32,1.275);}
+  @keyframes pop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+
+  .eyebrow{font-size:.66rem;letter-spacing:.25em;text-transform:uppercase;color:var(--success);margin-bottom:.9rem;}
+  .title{font-family:var(--font-d);font-size:clamp(2.5rem,6vw,4rem);font-weight:300;line-height:1.1;margin-bottom:1rem;}
+  .sub{color:var(--muted);line-height:1.8;font-size:.93rem;margin-bottom:.7rem;}
+  .order-id{font-family:var(--font-d);color:var(--accent);font-size:1.15rem;letter-spacing:.04em;margin-bottom:3rem;}
+
+  /* ORDER CARD */
+  .order-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:2rem;text-align:left;margin-bottom:1.5rem;}
+  .oc-head{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.3rem;padding-bottom:.7rem;border-bottom:1px solid var(--border);}
+  .oc-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.85rem;font-size:.85rem;gap:1rem;}
+  .oc-lbl{color:var(--muted);flex-shrink:0;}
+  .oc-val{text-align:right;}
+  .oc-total-row{display:flex;justify-content:space-between;align-items:center;padding-top:1rem;margin-top:.5rem;border-top:1px solid var(--border);}
+  .oc-total-lbl{font-size:1rem;font-weight:500;}
+  .oc-total-val{font-family:var(--font-d);font-size:1.7rem;color:var(--accent);}
+
+  /* WHAT'S NEXT */
+  .next-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:1.7rem;text-align:left;margin-bottom:2.5rem;}
+  .next-head{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;}
+  .next-step{display:flex;align-items:flex-start;gap:1.1rem;margin-bottom:1rem;}
+  .next-step:last-child{margin-bottom:0;}
+  .step-circle{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1px solid var(--accent);color:var(--accent);font-size:.7rem;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+  .step-text{font-size:.83rem;color:var(--muted);line-height:1.6;}
+  .step-text strong{color:var(--text);font-weight:400;}
+
+  /* CTA */
+  .cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+  .btn-p{background:var(--accent);color:#0b0b0b;padding:.9rem 2.2rem;border:none;border-radius:var(--r);font-family:var(--font-b);font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;font-weight:500;cursor:pointer;text-decoration:none;transition:all var(--tr);display:inline-block;}
+  .btn-p:hover{background:var(--accent2);transform:translateY(-2px);}
+  .btn-o{background:transparent;border:1px solid var(--border);color:var(--text);padding:.85rem 2rem;border-radius:var(--r);font-family:var(--font-b);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;display:inline-block;transition:all var(--tr);}
+  .btn-o:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* NOT FOUND */
+  .nf{text-align:center;padding:6rem 2rem;}
+  .nf-icon{font-size:4rem;margin-bottom:1.5rem;}
+  .nf-title{font-family:var(--font-d);font-size:2rem;margin-bottom:1rem;}
+  .nf-sub{color:var(--muted);margin-bottom:2rem;}
+
+  /* CONFETTI */
+  .cf{position:fixed;top:-10px;border-radius:2px;animation:cffall linear forwards;pointer-events:none;z-index:999;}
+  @keyframes cffall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+
+  footer{border-top:1px solid var(--border);padding:2.5rem 3rem;display:flex;justify-content:space-between;align-items:center;}
+  .f-brand{font-family:var(--font-d);font-size:1.5rem;color:var(--accent);}
+  .f-links{display:flex;gap:2rem;}
+  .f-links a{font-size:.78rem;color:var(--muted);text-decoration:none;transition:color var(--tr);}
+  .f-links a:hover{color:var(--accent);}
+
+  @media(max-width:600px){
+    nav{padding:0 1.2rem;}
+    .wrap{padding:3rem 1.2rem 5rem;}
+    footer{flex-direction:column;gap:1rem;padding:2rem 1.2rem;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AURA</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </div>
+</nav>
+
+<main id="main"></main>
+
+<footer>
+  <div class="f-brand">AURA</div>
+  <div class="f-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="#">Support</a>
+  </div>
+</footer>
+
+<script>
+  const order=(()=>{try{return JSON.parse(localStorage.getItem('aura_order')||'null');}catch{return null;}})();
+
+  if(!order){
+    document.getElementById('main').innerHTML=`
+      <div class="nf">
+        <div class="nf-icon">📭</div>
+        <h2 class="nf-title">No Order Found</h2>
+        <p class="nf-sub">It looks like you haven't placed an order yet, or it has already been cleared.</p>
+        <a href="shop.html" class="btn-p">Go to Shop</a>
+      </div>`;
+  } else {
+    document.getElementById('main').innerHTML=`
+      <div class="wrap">
+        <div class="ring">✅</div>
+        <p class="eyebrow">Order Confirmed</p>
+        <h1 class="title">Thank you,<br>${order.name.split(' ')[0]}!</h1>
+        <p class="sub">Your order has been placed and is being prepared with care.<br>A confirmation will be sent to <strong style="color:var(--text)">${order.email}</strong>.</p>
+        <p class="order-id">Order #${order.orderId}</p>
+
+        <div class="order-card">
+          <p class="oc-head">Order Details</p>
+          <div class="oc-row"><span class="oc-lbl">Order ID</span><span class="oc-val">${order.orderId}</span></div>
+          <div class="oc-row"><span class="oc-lbl">Items</span><span class="oc-val">${order.qty} item${order.qty!==1?'s':''} across ${order.items} product${order.items!==1?'s':''}</span></div>
+          <div class="oc-row"><span class="oc-lbl">Ship To</span><span class="oc-val">${order.address}</span></div>
+          <div class="oc-row"><span class="oc-lbl">Payment</span><span class="oc-val">Credit Card ✓</span></div>
+          <div class="oc-row"><span class="oc-lbl">Est. Delivery</span><span class="oc-val">${order.delivery}</span></div>
+          <div class="oc-total-row">
+            <span class="oc-total-lbl">Total Paid</span>
+            <span class="oc-total-val">₹${order.grand.toLocaleString()}</span>
+          </div>
+        </div>
+
+        <div class="next-card">
+          <p class="next-head">What Happens Next</p>
+          <div class="next-step">
+            <div class="step-circle">1</div>
+            <p class="step-text"><strong>Order Processing</strong> — We'll verify and carefully pack your items within 24 hours.</p>
+          </div>
+          <div class="next-step">
+            <div class="step-circle">2</div>
+            <p class="step-text"><strong>Dispatched</strong> — Your package will be shipped and you'll receive a tracking number via email.</p>
+          </div>
+          <div class="next-step">
+            <div class="step-circle">3</div>
+            <p class="step-text"><strong>Delivered</strong> — Estimated arrival by <strong>${order.delivery}</strong>. Enjoy your AURA pieces!</p>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a href="index.html" class="btn-p">Continue Shopping</a>
+          <a href="shop.html" class="btn-o">Explore Collection</a>
+        </div>
+      </div>`;
+
+    // confetti 🎉
+    const cols=['#c9a97f','#e8d5b4','#6db88a','#f0ece4','#e07070','#fff'];
+    for(let i=0;i<70;i++){
+      setTimeout(()=>{
+        const el=document.createElement('div'); el.className='cf';
+        const sz=6+Math.random()*9;
+        el.style.cssText=`left:${Math.random()*100}vw;width:${sz}px;height:${sz*1.5}px;background:${cols[Math.floor(Math.random()*cols.length)]};animation-duration:${2+Math.random()*2.5}s;animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg);`;
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),4000);
+      },i*25);
+    }
+
+    // Clear order from storage after 60s
+    setTimeout(()=>localStorage.removeItem('aura_order'),60000);
+  }
+</script>
+</body>
+</html>
