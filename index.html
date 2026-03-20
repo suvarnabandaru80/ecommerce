@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA — Curated Essentials</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b0b; --surface: #141414; --card: #1c1c1c;
+    --border: #2a2a2a; --accent: #c9a97f; --accent2: #e8d5b4;
+    --text: #f0ece4; --muted: #7a7672; --success: #6db88a;
+    --font-d: 'Cormorant Garamond', serif; --font-b: 'DM Sans', sans-serif;
+    --r: 3px; --tr: 0.28s cubic-bezier(.4,0,.2,1);
+  }
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font-b); font-weight:300; overflow-x:hidden; }
+
+  /* NAV */
+  nav {
+    position:sticky; top:0; z-index:100;
+    background:rgba(11,11,11,0.95); backdrop-filter:blur(20px);
+    border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 3rem; height:68px;
+  }
+  .logo { font-family:var(--font-d); font-size:1.8rem; font-weight:300; letter-spacing:.3em; color:var(--accent); text-decoration:none; }
+  .nav-links { display:flex; gap:2.5rem; align-items:center; }
+  .nav-links a { font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color var(--tr); }
+  .nav-links a:hover, .nav-links a.active { color:var(--text); }
+  .nav-links a.active { color:var(--accent); border-bottom:1px solid var(--accent); padding-bottom:2px; }
+  .cart-nav {
+    display:flex; align-items:center; gap:.5rem; text-decoration:none;
+    background:var(--surface); border:1px solid var(--border);
+    color:var(--text); padding:.5rem 1.1rem; border-radius:var(--r);
+    font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    transition:all var(--tr);
+  }
+  .cart-nav:hover { border-color:var(--accent); color:var(--accent); }
+  .cart-badge {
+    background:var(--accent); color:#0b0b0b; border-radius:50%;
+    width:19px; height:19px; font-size:.62rem; font-weight:700;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* HERO */
+  .hero {
+    min-height:88vh; display:grid; grid-template-columns:1fr 1fr;
+    align-items:center; gap:4rem; padding:5rem 3rem;
+    position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; width:700px; height:700px;
+    background:radial-gradient(circle, rgba(201,169,127,.07) 0%, transparent 65%);
+    right:-150px; top:50%; transform:translateY(-50%); pointer-events:none;
+  }
+  .hero-eye { font-size:.68rem; letter-spacing:.3em; text-transform:uppercase; color:var(--accent); margin-bottom:1.4rem; display:flex; align-items:center; gap:.8rem; }
+  .hero-eye::before { content:''; width:32px; height:1px; background:var(--accent); }
+  .hero-title { font-family:var(--font-d); font-size:clamp(3rem,5.5vw,5.8rem); font-weight:300; line-height:1.05; margin-bottom:1.6rem; }
+  .hero-title em { color:var(--accent); font-style:italic; }
+  .hero-sub { color:var(--muted); font-size:.95rem; line-height:1.8; margin-bottom:2.8rem; max-width:420px; }
+  .hero-btns { display:flex; gap:1rem; }
+  .btn-p { background:var(--accent); color:#0b0b0b; padding:.9rem 2.2rem; border:none; border-radius:var(--r); font-family:var(--font-b); font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; font-weight:500; cursor:pointer; text-decoration:none; transition:all var(--tr); display:inline-block; }
+  .btn-p:hover { background:var(--accent2); transform:translateY(-2px); box-shadow:0 10px 32px rgba(201,169,127,.25); }
+  .btn-o { background:transparent; border:1px solid var(--border); color:var(--text); padding:.85rem 2rem; border-radius:var(--r); font-family:var(--font-b); font-size:.74rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; text-decoration:none; transition:all var(--tr); display:inline-block; }
+  .btn-o:hover { border-color:var(--accent); color:var(--accent); }
+
+  .hero-grid { display:grid; grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr; gap:1rem; height:480px; }
+  .hero-tile {
+    background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+    display:flex; align-items:center; justify-content:center; font-size:3.2rem;
+    position:relative; overflow:hidden; cursor:pointer;
+    transition:all var(--tr);
+  }
+  .hero-tile:hover { border-color:var(--accent); transform:scale(1.02); }
+  .hero-tile.span2 { grid-row:span 2; font-size:5.5rem; }
+  .tile-label { position:absolute; bottom:.8rem; left:.9rem; font-size:.6rem; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+
+  /* MARQUEE */
+  .marquee { border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding:.85rem 0; overflow:hidden; white-space:nowrap; }
+  .marquee-inner { display:inline-flex; gap:3rem; animation:scroll 25s linear infinite; }
+  .m-item { font-size:.65rem; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); }
+  .m-dot { color:var(--accent); }
+  @keyframes scroll { to { transform:translateX(-50%); } }
+
+  /* FEATURES */
+  .features { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--border); }
+  .feat { padding:2.5rem 3rem; border-right:1px solid var(--border); transition:background var(--tr); }
+  .feat:last-child { border-right:none; }
+  .feat:hover { background:var(--surface); }
+  .feat-icon { font-size:2rem; margin-bottom:1rem; }
+  .feat-title { font-family:var(--font-d); font-size:1.3rem; margin-bottom:.5rem; }
+  .feat-desc { font-size:.8rem; color:var(--muted); line-height:1.7; }
+
+  /* SECTION */
+  .section { padding:4.5rem 3rem; }
+  .sec-head { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border); padding-bottom:1rem; margin-bottom:2.5rem; }
+  .sec-title { font-family:var(--font-d); font-size:2.3rem; font-weight:300; }
+  .sec-eye { font-size:.62rem; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:.3rem; }
+  .link-btn { font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); text-decoration:none; transition:color var(--tr); background:none; border:none; cursor:pointer; }
+  .link-btn:hover { color:var(--accent); }
+
+  /* PRODUCT GRID */
+  .pgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(270px,1fr)); gap:1.5rem; }
+  .pcard {
+    background:var(--card); border:1px solid var(--border); border-radius:var(--r);
+    overflow:hidden; text-decoration:none; color:inherit; display:block;
+    transition:all var(--tr);
+  }
+  .pcard:hover { border-color:var(--accent); transform:translateY(-5px); box-shadow:0 16px 48px rgba(0,0,0,.5); }
+  .pimg { height:230px; display:flex; align-items:center; justify-content:center; font-size:4.5rem; background:var(--surface); position:relative; }
+  .pbadge { position:absolute; top:.9rem; left:.9rem; background:var(--accent); color:#0b0b0b; font-size:.58rem; letter-spacing:.12em; text-transform:uppercase; padding:.22rem .6rem; border-radius:var(--r); font-weight:600; }
+  .pinfo { padding:1.3rem; }
+  .pcat { font-size:.62rem; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); margin-bottom:.35rem; }
+  .pname { font-size:1rem; font-weight:400; margin-bottom:.4rem; }
+  .pdesc { font-size:.78rem; color:var(--muted); line-height:1.55; margin-bottom:1rem; }
+  .pfoot { display:flex; align-items:center; justify-content:space-between; }
+  .pprice { font-family:var(--font-d); font-size:1.5rem; color:var(--accent); }
+  .padd { background:transparent; border:1px solid var(--accent); color:var(--accent); padding:.42rem 1rem; border-radius:var(--r); font-size:.68rem; letter-spacing:.1em; text-transform:uppercase; cursor:pointer; transition:all var(--tr); font-family:var(--font-b); }
+  .padd:hover { background:var(--accent); color:#0b0b0b; }
+
+  /* FOOTER */
+  footer { border-top:1px solid var(--border); padding:3.5rem 3rem; display:grid; grid-template-columns:1.5fr 1fr 1fr 1fr; gap:2.5rem; }
+  .f-brand { font-family:var(--font-d); font-size:1.7rem; color:var(--accent); margin-bottom:.9rem; }
+  .f-tag { font-size:.82rem; color:var(--muted); line-height:1.7; }
+  .f-head { font-size:.65rem; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); margin-bottom:1.1rem; }
+  .f-links { display:flex; flex-direction:column; gap:.55rem; }
+  .f-links a { font-size:.83rem; color:var(--text); text-decoration:none; transition:color var(--tr); }
+  .f-links a:hover { color:var(--accent); }
+  .f-bottom { grid-column:span 4; border-top:1px solid var(--border); padding-top:1.5rem; display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted); }
+
+  /* TOAST */
+  #toasts { position:fixed; bottom:2rem; right:2rem; z-index:999; display:flex; flex-direction:column; gap:.5rem; }
+  .toast { background:var(--card); border:1px solid var(--accent); color:var(--text); padding:.8rem 1.3rem; border-radius:var(--r); font-size:.82rem; min-width:230px; animation:tin .3s ease, tout .3s ease 2.5s forwards; }
+  @keyframes tin { from{transform:translateX(120%);opacity:0} to{transform:translateX(0);opacity:1} }
+  @keyframes tout { to{transform:translateX(120%);opacity:0} }
+  @keyframes fade { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+  main { animation:fade .35s ease; }
+
+  @media(max-width:900px) {
+    nav { padding:0 1.2rem; }
+    .hero { grid-template-columns:1fr; padding:3rem 1.2rem; min-height:auto; }
+    .hero-grid { display:none; }
+    .features { grid-template-columns:1fr; }
+    .feat { border-right:none; border-bottom:1px solid var(--border); }
+    footer { grid-template-columns:1fr 1fr; }
+    .f-bottom { grid-column:span 2; }
+    .section { padding:3rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AURA</a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Home</a>
+    <a href="shop.html">Shop</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <a href="cart.html" class="cart-nav">🛒 Cart <span class="cart-badge" id="cart-badge">0</span></a>
+</nav>
+
+<div id="toasts"></div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <p class="hero-eye">New Collection — 2026</p>
+      <h1 class="hero-title">Crafted for the<br><em>Discerning</em> Few</h1>
+      <p class="hero-sub">Curated essentials for those who value beauty in every detail. Each piece made to last a lifetime.</p>
+      <div class="hero-btns">
+        <a href="shop.html" class="btn-p">Explore Collection →</a>
+        <a href="shop.html" class="btn-o">View All Products</a>
+      </div>
+    </div>
+    <div class="hero-grid">
+      <div class="hero-tile span2">🕯️<span class="tile-label">Home Decor</span></div>
+      <div class="hero-tile">☕<span class="tile-label">Kitchen</span></div>
+      <div class="hero-tile">📓<span class="tile-label">Stationery</span></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee">
+    <div class="marquee-inner">
+      <span class="m-item">Free shipping over ₹5000</span><span class="m-dot">✦</span>
+      <span class="m-item">Handpicked artisan goods</span><span class="m-dot">✦</span>
+      <span class="m-item">Sustainable materials</span><span class="m-dot">✦</span>
+      <span class="m-item">30-day returns</span><span class="m-dot">✦</span>
+      <span class="m-item">Secure checkout</span><span class="m-dot">✦</span>
+      <span class="m-item">Gift wrapping available</span><span class="m-dot">✦</span>
+      <span class="m-item">Free shipping over ₹5000</span><span class="m-dot">✦</span>
+      <span class="m-item">Handpicked artisan goods</span><span class="m-dot">✦</span>
+      <span class="m-item">Sustainable materials</span><span class="m-dot">✦</span>
+      <span class="m-item">30-day returns</span><span class="m-dot">✦</span>
+      <span class="m-item">Secure checkout</span><span class="m-dot">✦</span>
+      <span class="m-item">Gift wrapping available</span><span class="m-dot">✦</span>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features">
+    <div class="feat"><div class="feat-icon">🚚</div><h3 class="feat-title">Free Shipping</h3><p class="feat-desc">Complimentary delivery on all orders above ₹5,000. Express dispatch within 24 hours.</p></div>
+    <div class="feat"><div class="feat-icon">🔒</div><h3 class="feat-title">Secure Payment</h3><p class="feat-desc">256-bit SSL encryption on every transaction. Your data is never stored or shared.</p></div>
+    <div class="feat"><div class="feat-icon">↩️</div><h3 class="feat-title">Easy Returns</h3><p class="feat-desc">Return within 30 days, no questions asked. Full refund guaranteed on every order.</p></div>
+  </div>
+
+  <!-- FEATURED PRODUCTS -->
+  <section class="section">
+    <div class="sec-head">
+      <div>
+        <p class="sec-eye">Carefully selected</p>
+        <h2 class="sec-title">Featured Pieces</h2>
+      </div>
+      <a href="shop.html" class="link-btn">View All →</a>
+    </div>
+    <div class="pgrid" id="featured-grid"></div>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <div class="f-brand">AURA</div>
+    <p class="f-tag">Curated essentials for those who value beauty in every detail. Thoughtfully made, intentionally chosen.</p>
+  </div>
+  <div>
+    <p class="f-head">Shop</p>
+    <div class="f-links">
+      <a href="shop.html">All Products</a>
+      <a href="shop.html">New Arrivals</a>
+      <a href="shop.html">Bestsellers</a>
+      <a href="cart.html">Your Cart</a>
+    </div>
+  </div>
+  <div>
+    <p class="f-head">Support</p>
+    <div class="f-links">
+      <a href="#">Shipping Policy</a>
+      <a href="#">Returns & Refunds</a>
+      <a href="#">Contact Us</a>
+      <a href="#">FAQ</a>
+    </div>
+  </div>
+  <div>
+    <p class="f-head">Follow Us</p>
+    <div class="f-links">
+      <a href="#">Instagram</a>
+      <a href="#">Pinterest</a>
+      <a href="#">Twitter</a>
+      <a href="#">Newsletter</a>
+    </div>
+  </div>
+  <div class="f-bottom">
+    <span>© 2026 AURA. All rights reserved.</span>
+    <span>Crafted with intention.</span>
+  </div>
+</footer>
+
+<script>
+  // ─── Shared product catalog ───
+  const PRODUCTS = [
+    {id:1,name:'Noir Candle Set',category:'Home',price:2499,emoji:'🕯️',badge:'Bestseller',desc:'Hand-poured soy wax candles in obsidian vessels. Scented with cedarwood and vetiver. 45hr burn time.',tags:['Home Decor','Handmade','Sustainable']},
+    {id:2,name:'Matte Leather Wallet',category:'Accessories',price:3899,emoji:'👜',badge:'New',desc:'Full-grain Italian leather bifold. Slim profile, 6 card slots, hidden zip pocket. Ages beautifully.',tags:['Leather','Minimalist','Unisex']},
+    {id:3,name:'Gold Leaf Journal',category:'Stationery',price:1799,emoji:'📓',badge:null,desc:'A5 dot-grid journal with gold foil cover. 200 pages of 100gsm acid-free cream paper.',tags:['Stationery','Gift','Premium']},
+    {id:4,name:'Ceramic Espresso Set',category:'Kitchen',price:4299,emoji:'☕',badge:'Limited',desc:'Set of 2 hand-thrown espresso cups with saucers. Matte black with a raw clay rim. Dishwasher safe.',tags:['Ceramics','Kitchen','Artisan']},
+    {id:5,name:'Linen Throw Blanket',category:'Home',price:5499,emoji:'🧣',badge:null,desc:'100% Belgian linen, natural undyed weave. Naturally cooling, softens with every wash. 130×170cm.',tags:['Linen','Bedroom','Neutral']},
+    {id:6,name:'Amber Glass Diffuser',category:'Wellness',price:3199,emoji:'🪔',badge:'New',desc:'Reed diffuser in hand-blown amber bottle. 150ml, notes of sandalwood and white tea. Lasts 3 months.',tags:['Wellness','Fragrance','Gift']},
+    {id:7,name:'Brass Desk Lamp',category:'Lighting',price:7999,emoji:'💡',badge:null,desc:'Articulated brass arm desk lamp with a linen shade. Adjustable angle, vintage Edison bulb included.',tags:['Lighting','Office','Vintage']},
+    {id:8,name:'Merino Wool Beanie',category:'Apparel',price:1499,emoji:'🧢',badge:null,desc:'Extra-fine 100% merino wool. One size, ribbed fit. Naturally odour-resistant and temperature-regulating.',tags:['Apparel','Winter','Sustainable']},
+    {id:9,name:'Sandstone Incense Set',category:'Wellness',price:1299,emoji:'🌿',badge:null,desc:'Box of 40 hand-rolled incense sticks in 4 scents. Comes with a carved soapstone holder.',tags:['Wellness','Ritual','Artisan']},
+    {id:10,name:'Woven Rattan Tray',category:'Home',price:2199,emoji:'🪣',badge:'Bestseller',desc:'Handwoven from sustainably sourced rattan. Perfect for organising countertops. 35×25cm.',tags:['Home','Natural','Handmade']},
+  ];
+
+  // ─── Cart helpers (localStorage) ───
+  function getCart() { try { return JSON.parse(localStorage.getItem('aura_cart')||'[]'); } catch { return []; } }
+  function saveCart(c) { localStorage.setItem('aura_cart', JSON.stringify(c)); }
+  function addToCart(id) {
+    const c = getCart(); const ex = c.find(i=>i.id===id);
+    if (ex) ex.qty++; else c.push({id,qty:1});
+    saveCart(c); updateBadge();
+  }
+  function cartCount() { return getCart().reduce((s,i)=>s+i.qty,0); }
+  function updateBadge() { const b=document.getElementById('cart-badge'); if(b) b.textContent=cartCount(); }
+
+  function toast(msg) {
+    const c=document.getElementById('toasts');
+    const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+    c.appendChild(t); setTimeout(()=>t.remove(),3000);
+  }
+
+  // ─── Render featured products ───
+  function renderFeatured() {
+    document.getElementById('featured-grid').innerHTML = PRODUCTS.slice(0,4).map(p=>`
+      <a href="product.html?id=${p.id}" class="pcard">
+        <div class="pimg">
+          ${p.badge?`<div class="pbadge">${p.badge}</div>`:''}
+          ${p.emoji}
+        </div>
+        <div class="pinfo">
+          <p class="pcat">${p.category}</p>
+          <p class="pname">${p.name}</p>
+          <p class="pdesc">${p.desc.slice(0,70)}…</p>
+          <div class="pfoot">
+            <span class="pprice">₹${p.price.toLocaleString()}</span>
+            <button class="padd" onclick="event.preventDefault();event.stopPropagation();addToCart(${p.id});toast('${p.emoji} Added to cart!')">Add</button>
+          </div>
+        </div>
+      </a>`).join('');
+  }
+
+  updateBadge();
+  renderFeatured();
+</script>
+</body>
+</html>
