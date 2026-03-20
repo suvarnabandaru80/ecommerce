@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop — AURA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0b0b0b; --surface:#141414; --card:#1c1c1c;
+    --border:#2a2a2a; --accent:#c9a97f; --accent2:#e8d5b4;
+    --text:#f0ece4; --muted:#7a7672; --success:#6db88a;
+    --font-d:'Cormorant Garamond',serif; --font-b:'DM Sans',sans-serif;
+    --r:3px; --tr:0.28s cubic-bezier(.4,0,.2,1);
+  }
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-weight:300;overflow-x:hidden;}
+
+  /* NAV */
+  nav{position:sticky;top:0;z-index:100;background:rgba(11,11,11,.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 3rem;height:68px;}
+  .logo{font-family:var(--font-d);font-size:1.8rem;font-weight:300;letter-spacing:.3em;color:var(--accent);text-decoration:none;}
+  .nav-links{display:flex;gap:2.5rem;align-items:center;}
+  .nav-links a{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color var(--tr);}
+  .nav-links a:hover{color:var(--text);}
+  .nav-links a.active{color:var(--accent);border-bottom:1px solid var(--accent);padding-bottom:2px;}
+  .cart-nav{display:flex;align-items:center;gap:.5rem;text-decoration:none;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.5rem 1.1rem;border-radius:var(--r);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;transition:all var(--tr);}
+  .cart-nav:hover{border-color:var(--accent);color:var(--accent);}
+  .cart-badge{background:var(--accent);color:#0b0b0b;border-radius:50%;width:19px;height:19px;font-size:.62rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+
+  /* PAGE HEADER */
+  .page-hd{padding:2.5rem 3rem 0;}
+  .page-hd h1{font-family:var(--font-d);font-size:2.5rem;font-weight:300;}
+  .page-hd p{color:var(--muted);font-size:.85rem;margin-top:.4rem;}
+  .divider{height:1px;background:var(--border);margin:1.2rem 3rem 0;}
+
+  /* LAYOUT */
+  .shop-layout{display:grid;grid-template-columns:230px 1fr;gap:2.5rem;padding:2.5rem 3rem;}
+
+  /* SIDEBAR */
+  .sidebar{position:sticky;top:86px;height:fit-content;}
+  .filter-box{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.4rem;margin-bottom:1rem;}
+  .filter-ttl{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+  .fopt{display:flex;align-items:center;gap:.6rem;margin-bottom:.55rem;cursor:pointer;font-size:.84rem;transition:color var(--tr);}
+  .fopt:hover{color:var(--accent);}
+  .fopt input{accent-color:var(--accent);width:14px;height:14px;cursor:pointer;flex-shrink:0;}
+  .fopt label{cursor:pointer;flex:1;}
+  .fcount{color:var(--muted);font-size:.7rem;margin-left:auto;}
+  .sort-sel{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);padding:.65rem .85rem;border-radius:var(--r);font-family:var(--font-b);font-size:.82rem;outline:none;transition:border-color var(--tr);cursor:pointer;}
+  .sort-sel:focus{border-color:var(--accent);}
+  .sort-sel option{background:var(--surface);}
+  .clear-btn{background:none;border:none;color:var(--muted);font-size:.72rem;cursor:pointer;display:flex;align-items:center;gap:.3rem;transition:color var(--tr);font-family:var(--font-b);padding:0;margin-top:.4rem;}
+  .clear-btn:hover{color:var(--accent);}
+
+  /* RESULTS */
+  .results-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;}
+  .res-count{font-size:.8rem;color:var(--muted);}
+  .active-tags{display:flex;gap:.5rem;flex-wrap:wrap;}
+  .atag{background:var(--surface);border:1px solid var(--accent);color:var(--accent);padding:.2rem .6rem;border-radius:99px;font-size:.64rem;letter-spacing:.06em;display:flex;align-items:center;gap:.35rem;}
+  .atag button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:.9rem;line-height:1;padding:0;}
+
+  /* PRODUCT GRID */
+  .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.5rem;}
+  .pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;text-decoration:none;color:inherit;display:block;transition:all var(--tr);}
+  .pcard:hover{border-color:var(--accent);transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,.5);}
+  .pimg{height:220px;display:flex;align-items:center;justify-content:center;font-size:4.5rem;background:var(--surface);position:relative;}
+  .pbadge{position:absolute;top:.9rem;left:.9rem;background:var(--accent);color:#0b0b0b;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .6rem;border-radius:var(--r);font-weight:600;}
+  .pinfo{padding:1.3rem;}
+  .pcat{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-bottom:.35rem;}
+  .pname{font-size:1rem;font-weight:400;margin-bottom:.4rem;}
+  .pdesc{font-size:.78rem;color:var(--muted);line-height:1.55;margin-bottom:1rem;}
+  .pfoot{display:flex;align-items:center;justify-content:space-between;}
+  .pprice{font-family:var(--font-d);font-size:1.5rem;color:var(--accent);}
+  .padd{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:.42rem 1rem;border-radius:var(--r);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);font-family:var(--font-b);}
+  .padd:hover{background:var(--accent);color:#0b0b0b;}
+
+  /* EMPTY */
+  .no-res{text-align:center;padding:4rem 0;color:var(--muted);}
+  .no-res-icon{font-size:3rem;margin-bottom:1rem;}
+  .btn-o{background:transparent;border:1px solid var(--border);color:var(--text);padding:.75rem 1.6rem;border-radius:var(--r);font-family:var(--font-b);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);display:inline-block;text-decoration:none;margin-top:1rem;}
+  .btn-o:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* TOAST */
+  #toasts{position:fixed;bottom:2rem;right:2rem;z-index:999;display:flex;flex-direction:column;gap:.5rem;}
+  .toast{background:var(--card);border:1px solid var(--accent);color:var(--text);padding:.8rem 1.3rem;border-radius:var(--r);font-size:.82rem;min-width:230px;animation:tin .3s ease,tout .3s ease 2.5s forwards;}
+  @keyframes tin{from{transform:translateX(120%);opacity:0}to{transform:translateX(0);opacity:1}}
+  @keyframes tout{to{transform:translateX(120%);opacity:0}}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  main{animation:fade .35s ease;}
+
+  /* FOOTER */
+  footer{border-top:1px solid var(--border);padding:3rem 3rem 2rem;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:2rem;}
+  .f-brand{font-family:var(--font-d);font-size:1.6rem;color:var(--accent);margin-bottom:.7rem;}
+  .f-tag{font-size:.8rem;color:var(--muted);line-height:1.6;}
+  .f-head{font-size:.63rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;}
+  .f-links{display:flex;flex-direction:column;gap:.5rem;}
+  .f-links a{font-size:.82rem;color:var(--text);text-decoration:none;transition:color var(--tr);}
+  .f-links a:hover{color:var(--accent);}
+  .f-bottom{grid-column:span 3;border-top:1px solid var(--border);padding-top:1.2rem;display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);margin-top:.5rem;}
+
+  @media(max-width:800px){
+    .shop-layout{grid-template-columns:1fr;}
+    nav,div.page-hd,div.divider,footer{padding-left:1.2rem;padding-right:1.2rem;}
+    .sidebar{position:static;}
+    footer{grid-template-columns:1fr;}
+    .f-bottom{grid-column:1;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">AURA</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="shop.html" class="active">Shop</a>
+    <a href="cart.html">Cart</a>
+  </div>
+  <a href="cart.html" class="cart-nav">🛒 Cart <span class="cart-badge" id="cart-badge">0</span></a>
+</nav>
+
+<div id="toasts"></div>
+
+<main>
+  <div class="page-hd">
+    <h1>The Collection</h1>
+    <p>Thoughtfully curated pieces for the home & beyond</p>
+  </div>
+  <div class="divider"></div>
+
+  <div class="shop-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="filter-box">
+        <p class="filter-ttl">Sort By</p>
+        <select class="sort-sel" id="sort-sel" onchange="applyFilters()">
+          <option value="default">Featured</option>
+          <option value="price-asc">Price: Low → High</option>
+          <option value="price-desc">Price: High → Low</option>
+          <option value="name">Name: A–Z</option>
+        </select>
+      </div>
+
+      <div class="filter-box">
+        <p class="filter-ttl">Category</p>
+        <div id="cat-filters"></div>
+      </div>
+
+      <div class="filter-box">
+        <p class="filter-ttl">Price Range</p>
+        <div class="fopt"><input type="checkbox" id="p1" value="0-2000" onchange="applyFilters()"><label for="p1">Under ₹2,000</label></div>
+        <div class="fopt"><input type="checkbox" id="p2" value="2000-4000" onchange="applyFilters()"><label for="p2">₹2,000 – ₹4,000</label></div>
+        <div class="fopt"><input type="checkbox" id="p3" value="4000-99999" onchange="applyFilters()"><label for="p3">Above ₹4,000</label></div>
+      </div>
+
+      <button class="clear-btn" onclick="clearFilters()">✕ Clear All Filters</button>
+    </aside>
+
+    <!-- MAIN -->
+    <div>
+      <div class="results-bar">
+        <p class="res-count" id="res-count"></p>
+        <div class="active-tags" id="active-tags"></div>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+      <div class="no-res" id="no-res" style="display:none">
+        <div class="no-res-icon">🔍</div>
+        <p>No products match your filters.</p>
+        <button class="btn-o" onclick="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div><div class="f-brand">AURA</div><p class="f-tag">Curated essentials for those who value beauty in every detail.</p></div>
+  <div><p class="f-head">Shop</p><div class="f-links"><a href="shop.html">All Products</a><a href="cart.html">Your Cart</a></div></div>
+  <div><p class="f-head">Support</p><div class="f-links"><a href="#">Shipping Policy</a><a href="#">Returns</a><a href="#">Contact</a></div></div>
+  <div class="f-bottom"><span>© 2026 AURA</span><span>Crafted with intention.</span></div>
+</footer>
+
+<script>
+  const PRODUCTS = [
+    {id:1,name:'Noir Candle Set',category:'Home',price:2499,emoji:'🕯️',badge:'Bestseller',desc:'Hand-poured soy wax candles in obsidian vessels. Scented with cedarwood and vetiver. 45hr burn time.',tags:['Home Decor','Handmade','Sustainable']},
+    {id:2,name:'Matte Leather Wallet',category:'Accessories',price:3899,emoji:'👜',badge:'New',desc:'Full-grain Italian leather bifold. Slim profile, 6 card slots, hidden zip pocket. Ages beautifully.',tags:['Leather','Minimalist','Unisex']},
+    {id:3,name:'Gold Leaf Journal',category:'Stationery',price:1799,emoji:'📓',badge:null,desc:'A5 dot-grid journal with gold foil cover. 200 pages of 100gsm acid-free cream paper.',tags:['Stationery','Gift','Premium']},
+    {id:4,name:'Ceramic Espresso Set',category:'Kitchen',price:4299,emoji:'☕',badge:'Limited',desc:'Set of 2 hand-thrown espresso cups with saucers. Matte black with a raw clay rim. Dishwasher safe.',tags:['Ceramics','Kitchen','Artisan']},
+    {id:5,name:'Linen Throw Blanket',category:'Home',price:5499,emoji:'🧣',badge:null,desc:'100% Belgian linen, natural undyed weave. Naturally cooling, softens with every wash. 130×170cm.',tags:['Linen','Bedroom','Neutral']},
+    {id:6,name:'Amber Glass Diffuser',category:'Wellness',price:3199,emoji:'🪔',badge:'New',desc:'Reed diffuser in hand-blown amber bottle. 150ml, notes of sandalwood and white tea. Lasts 3 months.',tags:['Wellness','Fragrance','Gift']},
+    {id:7,name:'Brass Desk Lamp',category:'Lighting',price:7999,emoji:'💡',badge:null,desc:'Articulated brass arm desk lamp with a linen shade. Adjustable angle, vintage Edison bulb included.',tags:['Lighting','Office','Vintage']},
+    {id:8,name:'Merino Wool Beanie',category:'Apparel',price:1499,emoji:'🧢',badge:null,desc:'Extra-fine 100% merino wool. One size, ribbed fit. Naturally odour-resistant and temperature-regulating.',tags:['Apparel','Winter','Sustainable']},
+    {id:9,name:'Sandstone Incense Set',category:'Wellness',price:1299,emoji:'🌿',badge:null,desc:'Box of 40 hand-rolled incense sticks in 4 scents. Comes with a carved soapstone holder.',tags:['Wellness','Ritual','Artisan']},
+    {id:10,name:'Woven Rattan Tray',category:'Home',price:2199,emoji:'🪣',badge:'Bestseller',desc:'Handwoven from sustainably sourced rattan. Perfect for organising countertops. 35×25cm.',tags:['Home','Natural','Handmade']},
+  ];
+
+  function getCart(){try{return JSON.parse(localStorage.getItem('aura_cart')||'[]');}catch{return[];}}
+  function saveCart(c){localStorage.setItem('aura_cart',JSON.stringify(c));}
+  function addToCart(id){const c=getCart();const ex=c.find(i=>i.id===id);if(ex)ex.qty++;else c.push({id,qty:1});saveCart(c);updateBadge();}
+  function cartCount(){return getCart().reduce((s,i)=>s+i.qty,0);}
+  function updateBadge(){const b=document.getElementById('cart-badge');if(b)b.textContent=cartCount();}
+  function toast(msg){const c=document.getElementById('toasts');const t=document.createElement('div');t.className='toast';t.textContent=msg;c.appendChild(t);setTimeout(()=>t.remove(),3000);}
+
+  const CATS = [...new Set(PRODUCTS.map(p=>p.category))];
+
+  // Build category checkboxes
+  document.getElementById('cat-filters').innerHTML = CATS.map(cat=>{
+    const n=PRODUCTS.filter(p=>p.category===cat).length;
+    return `<div class="fopt"><input type="checkbox" id="c-${cat}" value="${cat}" onchange="applyFilters()"><label for="c-${cat}">${cat}</label><span class="fcount">${n}</span></div>`;
+  }).join('');
+
+  function applyFilters(){
+    const cats=CATS.filter(c=>document.getElementById('c-'+c)?.checked);
+    const prices=['p1','p2','p3'].filter(id=>document.getElementById(id)?.checked).map(id=>document.getElementById(id).value);
+    const sort=document.getElementById('sort-sel').value;
+    let list=[...PRODUCTS];
+    if(cats.length) list=list.filter(p=>cats.includes(p.category));
+    if(prices.length) list=list.filter(p=>prices.some(r=>{const[a,b]=r.split('-').map(Number);return p.price>=a&&p.price<=b;}));
+    if(sort==='price-asc') list.sort((a,b)=>a.price-b.price);
+    if(sort==='price-desc') list.sort((a,b)=>b.price-a.price);
+    if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+    renderGrid(list);
+    renderResultsBar(list.length,cats,prices);
+  }
+
+  function renderGrid(list){
+    const g=document.getElementById('pgrid');
+    const nr=document.getElementById('no-res');
+    if(!list.length){g.innerHTML='';nr.style.display='block';return;}
+    nr.style.display='none';
+    g.innerHTML=list.map(p=>`
+      <a href="product.html?id=${p.id}" class="pcard">
+        <div class="pimg">${p.badge?`<div class="pbadge">${p.badge}</div>`:''}${p.emoji}</div>
+        <div class="pinfo">
+          <p class="pcat">${p.category}</p>
+          <p class="pname">${p.name}</p>
+          <p class="pdesc">${p.desc.slice(0,70)}…</p>
+          <div class="pfoot">
+            <span class="pprice">₹${p.price.toLocaleString()}</span>
+            <button class="padd" onclick="event.preventDefault();event.stopPropagation();addToCart(${p.id});toast('${p.emoji} Added!')">Add</button>
+          </div>
+        </div>
+      </a>`).join('');
+  }
+
+  function renderResultsBar(count,cats,prices){
+    document.getElementById('res-count').textContent=`${count} product${count!==1?'s':''} found`;
+    const priceLabels={'0-2000':'Under ₹2k','2000-4000':'₹2k–₹4k','4000-99999':'Above ₹4k'};
+    document.getElementById('active-tags').innerHTML=[
+      ...cats.map(c=>`<span class="atag">${c}<button onclick="document.getElementById('c-${c}').checked=false;applyFilters()">✕</button></span>`),
+      ...prices.map(p=>`<span class="atag">${priceLabels[p]||p}<button onclick="uncheckPrice('${p}')">✕</button></span>`)
+    ].join('');
+  }
+
+  function uncheckPrice(val){
+    ['p1','p2','p3'].forEach(id=>{const el=document.getElementById(id);if(el&&el.value===val)el.checked=false;});
+    applyFilters();
+  }
+
+  function clearFilters(){
+    CATS.forEach(c=>{const el=document.getElementById('c-'+c);if(el)el.checked=false;});
+    ['p1','p2','p3'].forEach(id=>{const el=document.getElementById(id);if(el)el.checked=false;});
+    document.getElementById('sort-sel').value='default';
+    applyFilters();
+  }
+
+  updateBadge();
+  applyFilters();
+</script>
+</body>
+</html>
